@@ -1,5 +1,8 @@
 package com.robotpajamas.dispatcher
 
 interface Cancellable {
-    fun cancel()
+    var isCancelled: Boolean
+    fun cancel() {
+        isCancelled = true
+    }
 }

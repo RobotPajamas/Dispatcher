@@ -6,18 +6,13 @@ import java.util.*
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.Executor
 
-class SerialDispatcher : Dispatcher {
+class SerialDispatcher(
+        private val executionHandler: Handler = Handler(Looper.getMainLooper()),
+        private val dispatchHandler: Handler = Handler(Looper.getMainLooper())) : Dispatcher {
 
     private var active: Dispatchable? = null
     private val queue: Queue<Dispatchable> = ConcurrentLinkedQueue()
-    private val dispatchHandler = Handler(Looper.getMainLooper())
-
-    private val executor: Executor = object : Executor {
-        private val handler = Handler(Looper.getMainLooper())
-        override fun execute(command: Runnable) {
-            handler.post(command)
-        }
-    }
+    private val executor = Executor { command -> executionHandler.post(command) }
 
     @Synchronized
     override fun clear() {
@@ -25,6 +20,11 @@ class SerialDispatcher : Dispatcher {
         dispatchHandler.removeCallbacksAndMessages(null)
         active = null
         queue.clear()
+    }
+
+    @Synchronized
+    override fun count(): Int {
+        return queue.size
     }
 
     @Synchronized
