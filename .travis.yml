@@ -1,34 +1,39 @@
 language: android
 jdk : oraclejdk8
-env:
-  global :
-    - ANROID_API_LEVEL = "27"
-    - ANDROID_BUILD_TOOLS_VERSION = "27.0.2"
-android :
-  components :
-    - tools
-    - platform-tools
-    - build-tools-$ANDROID_BUILD_TOOLS_VERSION
-    - android-$ANDROID_API_LEVEL
-    - extra-google-google_play_services
-    - extra-google-m2repository
-    - addon-google_apis-google-$ANDROID_API_LEVEL
-  licences :
-    - 'android-sdk-preview-license-.+'
-    - 'android-sdk-license-.+'
-    - 'google-gdk-license-.+'
-before_script :
-  # - mkdir -p "$ANDROID_HOME/licenses"
-  # - cp ./licenses/* "$ANDROID_HOME/licenses"
+
+before_install:
+  # Install SDK license so Android Gradle plugin can install deps.
+  - mkdir "$ANDROID_HOME/licenses" || true
+  - echo "d56f5187479451eabf01fb78af6dfcb131a6481e" > "$ANDROID_HOME/licenses/android-sdk-license"
+  # Install the rest of tools (e.g., avdmanager)
+  - sdkmanager tools
+  # Install the system image
+  - sdkmanager "system-images;android-27;default;armeabi-v7a"
+  # Create and start emulator for the script. Meant to race the install task.
+  # - echo no | avdmanager create avd --force -n test -k "system-images;android-18;default;armeabi-v7a"
+  # - $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window &
+
+branches:
+  except:
+    - gh-pages
+
+notifications:
+  email: false
+
+sudo: false
+
 before_cache:
+  # Do not cache a few Gradle files/directories (see https://docs.travis-ci.com/user/languages/java/#Caching)
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
 cache:
   directories:
+    # Gradle dependencies
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
+    # Android build cache (see http://tools.android.com/tech-docs/build-cache)
     - $HOME/.android/build-cache
+
 script :
   - ./gradlew clean test
-before_install:
-  - chmod +x gradlew
