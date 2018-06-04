@@ -6,6 +6,30 @@ def versionMajor = 0
 def versionMinor = 1
 def versionPatch = 0
 
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'dispatcher'
+
+    publishedGroupId = 'com.robotpajamas.dispatcher'
+    libraryName = 'Dispatcher'
+    artifact = 'dispatcher'
+
+    libraryDescription = 'Dispatching things in a Dispatchable way'
+
+    siteUrl = 'https://github.com/RobotPajamas/Dispatcher'
+    gitUrl = 'https://github.com/RobotPajamas/Dispatcher.git'
+
+    libraryVersion = "${versionMajor}.${versionMinor}.${versionPatch}"
+
+    developerId = 'sureshjoshi'
+    developerName = 'Suresh Joshi'
+    developerEmail = 'suresh@robotpajamas.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
 android {
     compileSdkVersion 27
     defaultConfig {
@@ -47,3 +71,7 @@ dependencies {
     testImplementation 'com.nhaarman:mockito-kotlin:1.5.0'
     testImplementation "org.robolectric:robolectric:3.8"
 }
+
+apply from: 'https://raw.githubusercontent.com/sureshjoshi/JCenter/master/installv1.gradle'
+apply from: 'https://raw.githubusercontent.com/sureshjoshi/JCenter/master/bintrayv1.gradle'
+
