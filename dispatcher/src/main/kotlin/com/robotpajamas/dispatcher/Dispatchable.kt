@@ -1,6 +1,12 @@
 package com.robotpajamas.dispatcher
 
-interface Dispatchable : Runnable, Cancellable, Timeoutable {
+interface Dispatchable : Runnable, Cancellable, Completable, Executable, Timeoutable {
     val id: String
-    fun execute()
+
+    override fun execute() {
+        execution.invoke { result ->
+            // Early return if failed
+            result.failure { complete(result) }
+        }
+    }
 }

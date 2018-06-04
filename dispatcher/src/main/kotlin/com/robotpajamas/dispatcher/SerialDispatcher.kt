@@ -29,7 +29,7 @@ class SerialDispatcher : Dispatcher {
 
     @Synchronized
     override fun enqueue(item: Dispatchable) {
-//        item.add { dispatchNext() } // Add a completion block
+        item.completions.add { dispatchNext() }
         queue.add(item)
         if (active == null) {
             dispatchNext()
