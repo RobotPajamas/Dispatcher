@@ -39,3 +39,8 @@ sealed class Result<Value> {
         is Result.Failure -> throw error
     }
 }
+
+inline fun <reified T> Result<*>.to(): Result<T>? {
+    @Suppress("UNCHECKED_CAST")
+    return this as? Result<T>
+}
