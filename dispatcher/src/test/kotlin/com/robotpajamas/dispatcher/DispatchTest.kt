@@ -19,9 +19,6 @@ class DispatchTest {
         assertThat(dispatch.isCancelled).isTrue()
     }
 
-    @Test
-    fun timedOut() {
-    }
 
     @Test
     fun getStates() {

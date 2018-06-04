@@ -3,6 +3,8 @@ package com.robotpajamas.dispatcher.mocks
 import com.robotpajamas.dispatcher.CompletionBlock
 import com.robotpajamas.dispatcher.Dispatchable
 import com.robotpajamas.dispatcher.ExecutionBlock
+import com.robotpajamas.dispatcher.Result
+import java.util.concurrent.TimeoutException
 
 class MockDispatchable : Dispatchable {
     override val id: String
@@ -16,10 +18,14 @@ class MockDispatchable : Dispatchable {
     override val completions: MutableList<CompletionBlock<*>> = mutableListOf()
     override val execution: ExecutionBlock<*>
         get() = {}
-    override val timeout: Int = 42
+
+    override var timeout: Int = 42
 
     override fun timedOut() {
-
+        isTimedOut = true
     }
+
+    // Test checks
+    var isTimedOut = false
 
 }
