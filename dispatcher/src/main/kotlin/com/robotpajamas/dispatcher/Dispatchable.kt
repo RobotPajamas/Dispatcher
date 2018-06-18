@@ -9,8 +9,7 @@ interface Dispatchable : Runnable, Cancellable, Completable, Executable, Timeout
 
     override fun execute() {
         execution.invoke { result ->
-            // Early return if failed, else nothing
-            result.failure { complete(result) }
+            complete(result)
         }
     }
 }
