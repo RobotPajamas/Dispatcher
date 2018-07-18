@@ -39,6 +39,8 @@ class SerialDispatcher(
     @Synchronized
     private fun dispatchNext() {
         // Remove pending timeout runnables
+        // TODO: this poses a potential problem when using a handler with the same looper to enqueue items
+        // TODO: as it will clear any posted callbacks and messages, thus clearing the queue
         dispatchHandler.removeCallbacksAndMessages(null)
 
         active = queue.poll()
@@ -54,6 +56,13 @@ class SerialDispatcher(
             }
             dispatchHandler.postDelayed(cancel, it.timeout * 1000L)
             executor.execute(it)
+
+            executor.execute {
+                if (it.state == State.RESCHEDULED) {
+                    active = null
+                    enqueue(it)
+                }
+            }
         }
     }
 
