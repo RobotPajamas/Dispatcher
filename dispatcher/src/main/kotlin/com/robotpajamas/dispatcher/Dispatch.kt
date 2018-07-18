@@ -5,16 +5,20 @@ import java.util.concurrent.TimeoutException
 
 class Dispatch<T>(override val id: String,
                   override val timeout: Int = 1,
+                  override val retryPolicy: RetryPolicy = RetryPolicy.NONE,
+                  override val maxRetries: Int = 2,
                   override val execution: ExecutionBlock<T>,
                   completion: CompletionBlock<T>? = null) : Dispatchable {
 
     override val completions = mutableListOf<CompletionBlock<*>>()
     override var isCancelled = false
-    internal var state = State.READY
+    override var state = State.READY
+    override var retries = 0
 
     init {
-        assert(timeout >= 0, { "QueueItem timeout must be >= 0" })
+        assert(timeout >= 0) { "QueueItem timeout must be >= 0" }
         completion?.let { completions.add(it as CompletionBlock<*>) }
+        state = State.READY
     }
 
     override fun run() {
