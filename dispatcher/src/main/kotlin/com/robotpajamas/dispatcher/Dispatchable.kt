@@ -12,19 +12,8 @@ interface Dispatchable : Runnable, Cancellable, Completable, Executable, Timeout
         execution.invoke { result ->
             result.onFailure {
                 when (retryPolicy) {
-                    RetryPolicy.RETRY -> if (retries < maxRetries) {
-                        retry()
-                        execute()
-                    } else {
-                        complete(result)
-                    }
-                    RetryPolicy.RESCHEDULE -> if (retries < maxRetries) {
-                        retry()
-                        state = State.RESCHEDULED
-                    } else {
-                        state = State.READY //any state, but must not be RESCHEDULED
-                        complete(result)
-                    }
+                    RetryPolicy.RETRY, RetryPolicy.RESCHEDULE ->
+                        if (retries < maxRetries) retry() else complete(result)
                     RetryPolicy.NONE -> complete(result)
                 }
             }

@@ -54,15 +54,19 @@ class SerialDispatcher(
                 }
                 active?.timedOut()
             }
-            dispatchHandler.postDelayed(cancel, it.timeout * 1000L)
-            executor.execute(it)
 
-            executor.execute {
-                if (it.state == State.RESCHEDULED) {
+            // Set retry action as per item's retry policy
+            if (it.retryPolicy == RetryPolicy.RESCHEDULE) {
+                it.retry = {
                     active = null
                     enqueue(it)
                 }
+            } else if (it.retryPolicy == RetryPolicy.RETRY) {
+                it.retry = { it.execute() }
             }
+
+            dispatchHandler.postDelayed(cancel, it.timeout * 1000L)
+            executor.execute(it)
         }
     }
 
