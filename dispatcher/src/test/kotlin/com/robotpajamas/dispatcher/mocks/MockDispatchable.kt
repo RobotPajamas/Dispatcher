@@ -18,6 +18,7 @@ class MockDispatchable : Dispatchable {
     override val retryPolicy: RetryPolicy = RetryPolicy.NONE
     override var retries: Int = 0
     override val maxRetries: Int = 2
+    override var retry: () -> Unit = {}
 
     override var timeout: Int = 42
 

@@ -14,6 +14,7 @@ class Dispatch<T>(override val id: String,
     override var isCancelled = false
     override var state = State.READY
     override var retries = 0
+    override var retry: () -> Unit = {}
 
     init {
         assert(timeout >= 0) { "QueueItem timeout must be >= 0" }
