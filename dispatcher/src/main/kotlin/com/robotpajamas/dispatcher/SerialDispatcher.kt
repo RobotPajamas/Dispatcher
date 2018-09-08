@@ -60,10 +60,17 @@ class SerialDispatcher(
             if (it.retryPolicy == RetryPolicy.RESCHEDULE) {
                 it.retry = {
                     active = null
+                    // TODO: Is this enqueue adding more and more "dispatchNext" calls?
                     enqueue(it)
                 }
             } else if (it.retryPolicy == RetryPolicy.RETRY) {
-                it.retry = { it.execute() }
+                it.retry = {
+//                    it.execute()
+                    executor.execute(it)
+                    // TODO: How to retry within the same context as the rest of the app?
+                    // TODO: e.g. enqueue, but at the front of the queue - so the handlers all run?
+                    dispatchHandler.postDelayed(cancel, it.timeout * 1000L)
+                }
             }
 
             dispatchHandler.postDelayed(cancel, it.timeout * 1000L)

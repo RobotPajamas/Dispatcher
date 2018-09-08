@@ -10,16 +10,31 @@ interface Dispatchable : Runnable, Cancellable, Completable, Executable, Timeout
 
     override fun execute() {
         execution.invoke { result ->
-            result.onFailure {
-                when (retryPolicy) {
-                    RetryPolicy.RETRY, RetryPolicy.RESCHEDULE ->
-                        if (retries < maxRetries) retry() else complete(result)
-                    RetryPolicy.NONE -> complete(result)
-                }
+            complete(result)
+
+            // TODO: Moving this retry code to complete to see if that fixes the "timeout" no-retry issue
+//            result.onFailure {
+//                when (retryPolicy) {
+//                    RetryPolicy.RETRY, RetryPolicy.RESCHEDULE ->
+//                        if (retries < maxRetries) retry() else complete(result)
+//                    RetryPolicy.NONE -> complete(result)
+//                }
+//            }
+//            result.onSuccess {
+//                complete(result)
+//            }
+        }
+    }
+
+    override fun complete(result: Result<*>) {
+        result.onFailure {
+            when (retryPolicy) {
+                RetryPolicy.RETRY, RetryPolicy.RESCHEDULE -> if (retries < maxRetries) retry() else super.complete(result)
+                RetryPolicy.NONE -> super.complete(result)
             }
-            result.onSuccess {
-                complete(result)
-            }
+        }
+        result.onSuccess {
+            super.complete(result)
         }
     }
 }
