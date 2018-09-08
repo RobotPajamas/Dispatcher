@@ -32,6 +32,7 @@ class MainViewModel : BaseObservable() {
                     val message = "${dispatchNone.id}: Executing... Will pass.\n"
                     Timber.d(message)
                     text += message
+
                     cb(Result.Success("${dispatchNone.id} - Woot!"))
                 }) { result ->
             Timber.d("${dispatchNone.id}: Completion running")
@@ -130,6 +131,64 @@ class MainViewModel : BaseObservable() {
                     Timber.d(message)
                     text += message
                     cb(Result.Failure(Exception("${dispatchReschedule.id}: Fake failure")))
+                }) { result ->
+            Timber.d("${dispatchReschedule.id}: Completion running")
+            result.onSuccess {
+                text += "${dispatchReschedule.id}: Completion success - $it\n"
+            }
+            result.onFailure {
+                text += "${dispatchReschedule.id}: Completion failure - $it\n"
+            }
+        }
+
+        dispatcher.enqueue(dispatchReschedule)
+        dispatcher.enqueue(dispatchNone)
+        dispatcher.enqueue(dispatchRetry)
+    }
+
+    fun timeout() {
+        text += "\n\n"
+        dispatchNone = Dispatch(
+                id = "NONE",
+                retryPolicy = RetryPolicy.NONE,
+                execution = { cb ->
+                    val message = "${dispatchNone.id}: Executing... Will fail.\n"
+                    Timber.d(message)
+                    text += message
+                }) { result ->
+            Timber.d("${dispatchNone.id}: Completion running")
+            result.onSuccess {
+                text += "${dispatchNone.id}: Completion success - $it\n"
+            }
+            result.onFailure {
+                text += "${dispatchNone.id}: Completion failure - $it\n"
+            }
+        }
+
+        dispatchRetry = Dispatch(
+                id = "RETRY",
+                retryPolicy = RetryPolicy.RETRY,
+                execution = { cb ->
+                    val message = "${dispatchRetry.id}: Executing... Will fail.\n"
+                    Timber.d(message)
+                    text += message
+                }) { result ->
+            Timber.d("${dispatchRetry.id}: Completion running")
+            result.onSuccess {
+                text += "${dispatchRetry.id}: Completion success - $it\n"
+            }
+            result.onFailure {
+                text += "${dispatchRetry.id}: Completion failure - $it\n"
+            }
+        }
+
+        dispatchReschedule = Dispatch(
+                id = "RESCHED",
+                retryPolicy = RetryPolicy.RESCHEDULE,
+                execution = { cb ->
+                    val message = "${dispatchReschedule.id}: Executing... Will fail.\n"
+                    Timber.d(message)
+                    text += message
                 }) { result ->
             Timber.d("${dispatchReschedule.id}: Completion running")
             result.onSuccess {

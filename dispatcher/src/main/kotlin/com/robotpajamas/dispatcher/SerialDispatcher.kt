@@ -27,6 +27,7 @@ class SerialDispatcher(
         return queue.size
     }
 
+    // TODO: Should this return the dispatch item's callback object?
     @Synchronized
     override fun enqueue(item: Dispatchable) {
         item.completions.add { dispatchNext() }

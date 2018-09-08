@@ -33,6 +33,13 @@
                 android:text="@string/fail" />
 
             <Button
+                android:id="@+id/button_timeout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{() -> vm.timeout()}"
+                android:text="@string/timeout" />
+
+            <Button
                 android:id="@+id/button_clear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
