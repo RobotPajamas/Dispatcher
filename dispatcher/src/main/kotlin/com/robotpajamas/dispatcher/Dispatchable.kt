@@ -1,15 +1,25 @@
 package com.robotpajamas.dispatcher
 
-internal enum class State {
-    NONE, READY, EXECUTING, FINISHING, FINISHED
+enum class State {
+    NONE, READY, EXECUTING, FINISHING, FINISHED, RESCHEDULED
 }
 
-interface Dispatchable : Runnable, Cancellable, Completable, Executable, Timeoutable {
+interface Dispatchable : Runnable, Cancellable, Completable, Executable, Timeoutable, Retriable {
     val id: String
+    var state: State
 
     override fun execute() {
         execution.invoke { result ->
-            complete(result)
+            result.onFailure {
+                when (retryPolicy) {
+                    RetryPolicy.RETRY, RetryPolicy.RESCHEDULE ->
+                        if (retries < maxRetries) retry() else complete(result)
+                    RetryPolicy.NONE -> complete(result)
+                }
+            }
+            result.onSuccess {
+                complete(result)
+            }
         }
     }
 }
