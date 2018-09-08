@@ -27,6 +27,7 @@ class SerialDispatcher(
         return queue.size
     }
 
+    // TODO: Should this return the dispatch item's callback object?
     @Synchronized
     override fun enqueue(item: Dispatchable) {
         item.completions.add { dispatchNext() }
@@ -39,6 +40,8 @@ class SerialDispatcher(
     @Synchronized
     private fun dispatchNext() {
         // Remove pending timeout runnables
+        // TODO: this poses a potential problem when using a handler with the same looper to enqueue items
+        // TODO: as it will clear any posted callbacks and messages, thus clearing the queue
         dispatchHandler.removeCallbacksAndMessages(null)
 
         active = queue.poll()
@@ -52,6 +55,24 @@ class SerialDispatcher(
                 }
                 active?.timedOut()
             }
+
+            // Set retry action as per item's retry policy
+            if (it.retryPolicy == RetryPolicy.RESCHEDULE) {
+                it.retry = {
+                    active = null
+                    // TODO: Is this enqueue adding more and more "dispatchNext" calls?
+                    enqueue(it)
+                }
+            } else if (it.retryPolicy == RetryPolicy.RETRY) {
+                it.retry = {
+//                    it.execute()
+                    executor.execute(it)
+                    // TODO: How to retry within the same context as the rest of the app?
+                    // TODO: e.g. enqueue, but at the front of the queue - so the handlers all run?
+                    dispatchHandler.postDelayed(cancel, it.timeout * 1000L)
+                }
+            }
+
             dispatchHandler.postDelayed(cancel, it.timeout * 1000L)
             executor.execute(it)
         }

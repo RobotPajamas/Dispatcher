@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">dispatcher-sample</string>
+    <string name="pass">Pass</string>
+    <string name="fail">Fail</string>
+    <string name="clear">Clear</string>
+    <string name="timeout">Timeout</string>
 </resources>

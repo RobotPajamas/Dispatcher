@@ -1,10 +1,6 @@
 package com.robotpajamas.dispatcher.mocks
 
-import com.robotpajamas.dispatcher.CompletionBlock
-import com.robotpajamas.dispatcher.Dispatchable
-import com.robotpajamas.dispatcher.ExecutionBlock
-import com.robotpajamas.dispatcher.Result
-import java.util.concurrent.TimeoutException
+import com.robotpajamas.dispatcher.*
 
 class MockDispatchable : Dispatchable {
     override val id: String
@@ -18,6 +14,11 @@ class MockDispatchable : Dispatchable {
     override val completions: MutableList<CompletionBlock<*>> = mutableListOf()
     override val execution: ExecutionBlock<*>
         get() = {}
+    override var state: State = State.READY
+    override val retryPolicy: RetryPolicy = RetryPolicy.NONE
+    override var retries: Int = 0
+    override val maxRetries: Int = 2
+    override var retry: () -> Unit = {}
 
     override var timeout: Int = 42
 

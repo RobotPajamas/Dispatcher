@@ -21,13 +21,13 @@ sealed class Result<Value> {
     val isFailure: Boolean
         get() = !isSuccess
 
-    fun success(call: (Value) -> Unit) {
+    fun onSuccess(call: (Value) -> Unit) {
         if (this is Result.Success) {
             call(value)
         }
     }
 
-    fun failure(call: (Exception) -> Unit) {
+    fun onFailure(call: (Exception) -> Unit) {
         if (this is Result.Failure) {
             call(error)
         }
