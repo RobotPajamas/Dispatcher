@@ -65,7 +65,7 @@ class SerialDispatcher(
                 }
             } else if (it.retryPolicy == RetryPolicy.RETRY) {
                 it.retry = {
-//                    it.execute()
+                    //                    it.execute()
                     executor.execute(it)
                     // TODO: How to retry within the same context as the rest of the app?
                     // TODO: e.g. enqueue, but at the front of the queue - so the handlers all run?
@@ -78,9 +78,9 @@ class SerialDispatcher(
         }
     }
 
-//    @Synchronized
-//    internal fun <T> dispatched(name: String): QueueItem<T>? {
-//        @Suppress("UNCHECKED_CAST")
-//        return if (name == active?.name) active as? QueueItem<T> else null
-//    }
+    @Synchronized
+    fun <T> dispatched(id: String): Dispatch<T>? {
+        @Suppress("UNCHECKED_CAST")
+        return if (id == active?.id) active as? Dispatch<T> else null
+    }
 }
