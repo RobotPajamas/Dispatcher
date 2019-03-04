@@ -1,7 +1,7 @@
 package com.robotpajamas.android.dispatcher.ui
 
-import android.databinding.BaseObservable
-import android.databinding.Bindable
+import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
 import com.robotpajamas.android.dispatcher.BR
 import com.robotpajamas.dispatcher.Dispatch
 import com.robotpajamas.dispatcher.Result
