@@ -1,13 +1,17 @@
 package com.robotpajamas.dispatcher
 
 import android.os.Handler
+import android.os.Looper.getMainLooper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.Shadows.shadowOf
+import org.robolectric.annotation.LooperMode
 
 @RunWith(RobolectricTestRunner::class)
+@LooperMode(LooperMode.Mode.PAUSED)
 class RetryTest {
 
     private val dispatcher = SerialDispatcher()
@@ -52,6 +56,7 @@ class RetryTest {
             dispatcher.enqueue(dispatchTwo)
         }
 
+        shadowOf(getMainLooper()).idle()
         println(actual)
         assertThat(actual).containsExactlyElementsOf(expected)
     }
@@ -81,6 +86,7 @@ class RetryTest {
             dispatcher.enqueue(dispatchTwo)
         }
 
+        shadowOf(getMainLooper()).idle()
         println(actual)
         assertThat(actual).containsExactlyElementsOf(expected)
     }
@@ -120,6 +126,7 @@ class RetryTest {
             dispatcher.enqueue(dispatchThree)
         }
 
+        shadowOf(getMainLooper()).idle()
         println(actual)
         assertThat(actual).containsExactlyElementsOf(expected)
     }
