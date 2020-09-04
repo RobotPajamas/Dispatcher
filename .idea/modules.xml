@@ -2,12 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Dispatcher.iml" filepath="$PROJECT_DIR$/Dispatcher.iml" />
-      <module fileurl="file://$PROJECT_DIR$/dispatcher/dispatcher.iml" filepath="$PROJECT_DIR$/dispatcher/dispatcher.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dispatcher.iml" filepath="$PROJECT_DIR$/.idea/modules/dispatcher.iml" group="dispatcher" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/dispatcher/dispatcher-dispatcher.iml" filepath="$PROJECT_DIR$/.idea/modules/dispatcher/dispatcher-dispatcher.iml" group="dispatcher/dispatcher" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dispatcher-sample/dispatcher-dispatcher-sample.iml" filepath="$PROJECT_DIR$/.idea/modules/dispatcher-sample/dispatcher-dispatcher-sample.iml" group="dispatcher/dispatcher-sample" />
-      <module fileurl="file://$PROJECT_DIR$/dispatcher-sample/dispatcher-sample.iml" filepath="$PROJECT_DIR$/dispatcher-sample/dispatcher-sample.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/oss-dispatcher.iml" filepath="$PROJECT_DIR$/.idea/modules/oss-dispatcher.iml" group="dispatcher" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dispatcher-sample/dispatcher-sample.iml" filepath="$PROJECT_DIR$/.idea/modules/dispatcher-sample/dispatcher-sample.iml" group="dispatcher/dispatcher-sample" />
     </modules>
   </component>
 </project>
