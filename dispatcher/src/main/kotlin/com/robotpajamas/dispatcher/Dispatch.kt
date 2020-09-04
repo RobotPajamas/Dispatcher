@@ -3,12 +3,14 @@ package com.robotpajamas.dispatcher
 import java.util.concurrent.CancellationException
 import java.util.concurrent.TimeoutException
 
-class Dispatch<T>(override val id: String,
-                  override val timeout: Int = 1,
-                  override val retryPolicy: RetryPolicy = RetryPolicy.NONE,
-                  override val maxRetries: Int = 2,
-                  override val execution: ExecutionBlock<T>,
-                  completion: CompletionBlock<T>? = null) : Dispatchable {
+class Dispatch<T>(
+    override val id: String,
+    override val timeout: Int = 1,
+    override val retryPolicy: RetryPolicy = RetryPolicy.NONE,
+    override val maxRetries: Int = 2,
+    override val execution: ExecutionBlock<T>,
+    completion: CompletionBlock<T>? = null
+) : Dispatchable {
 
     override val completions = mutableListOf<CompletionBlock<*>>()
     override var isCancelled = false

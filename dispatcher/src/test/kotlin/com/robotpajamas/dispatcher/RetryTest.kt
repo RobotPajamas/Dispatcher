@@ -34,21 +34,21 @@ class RetryTest {
     @Test
     fun `Given 2 items with RETRY and NONE retry policies, When 2 items are scheduled and RETRY one fails, Then its execution is retried maximum attempts before executing the second item`() {
         dispatchOne = Dispatch(id = "id",
-                retryPolicy = RetryPolicy.RETRY,
-                execution = { cb ->
-                    actual.add(dispatchOne.id)
-                    println("Execution failed")
-                    cb(Result.Failure(Exception("Mocked failure")))
-                },
-                completion = { println("Completion block invoked") })
+            retryPolicy = RetryPolicy.RETRY,
+            execution = { cb ->
+                actual.add(dispatchOne.id)
+                println("Execution failed")
+                cb(Result.Failure(Exception("Mocked failure")))
+            },
+            completion = { println("Completion block invoked") })
         dispatchTwo = Dispatch(id = "id2",
-                retryPolicy = RetryPolicy.NONE,
-                execution = { cb ->
-                    actual.add(dispatchTwo.id)
-                    println("Execution failed")
-                    cb(Result.Failure(Exception("Mocked failure")))
-                },
-                completion = { println("Completion block invoked") })
+            retryPolicy = RetryPolicy.NONE,
+            execution = { cb ->
+                actual.add(dispatchTwo.id)
+                println("Execution failed")
+                cb(Result.Failure(Exception("Mocked failure")))
+            },
+            completion = { println("Completion block invoked") })
         expected.addAll(listOf(dispatchOne.id, dispatchOne.id, dispatchOne.id, dispatchTwo.id))
 
         handler.post {
@@ -64,21 +64,21 @@ class RetryTest {
     @Test
     fun `Given 2 items with RESCHEDULE and NONE retry policies, When 2 items are scheduled and RESCHEDULE one fails, Then it gets re-added to the tail of the queue, And the order of execution matches expected order`() {
         dispatchOne = Dispatch(id = "id",
-                retryPolicy = RetryPolicy.RESCHEDULE,
-                execution = { cb ->
-                    actual.add(dispatchOne.id)
-                    println("Execution failed")
-                    cb(Result.Failure(Exception("Mocked failure")))
-                },
-                completion = { println("Completion block invoked") })
+            retryPolicy = RetryPolicy.RESCHEDULE,
+            execution = { cb ->
+                actual.add(dispatchOne.id)
+                println("Execution failed")
+                cb(Result.Failure(Exception("Mocked failure")))
+            },
+            completion = { println("Completion block invoked") })
         dispatchTwo = Dispatch(id = "id2",
-                retryPolicy = RetryPolicy.NONE,
-                execution = { cb ->
-                    actual.add(dispatchTwo.id)
-                    println("Execution failed")
-                    cb(Result.Failure(Exception("Mocked failure")))
-                },
-                completion = { println("Completion block invoked") })
+            retryPolicy = RetryPolicy.NONE,
+            execution = { cb ->
+                actual.add(dispatchTwo.id)
+                println("Execution failed")
+                cb(Result.Failure(Exception("Mocked failure")))
+            },
+            completion = { println("Completion block invoked") })
         expected.addAll(listOf(dispatchOne.id, dispatchTwo.id, dispatchOne.id, dispatchOne.id))
 
         handler.post {
@@ -94,31 +94,35 @@ class RetryTest {
     @Test
     fun `Given 3 items with different retry policies, When execution fails, Then the order of retries matches expected order`() {
         dispatchOne = Dispatch(id = "id",
-                retryPolicy = RetryPolicy.RESCHEDULE,
-                execution = { cb ->
-                    actual.add(dispatchOne.id)
-                    println("Execution failed")
-                    cb(Result.Failure(Exception("Mocked failure")))
-                },
-                completion = { println("Completion block invoked") })
+            retryPolicy = RetryPolicy.RESCHEDULE,
+            execution = { cb ->
+                actual.add(dispatchOne.id)
+                println("Execution failed")
+                cb(Result.Failure(Exception("Mocked failure")))
+            },
+            completion = { println("Completion block invoked") })
         dispatchTwo = Dispatch(id = "id2",
-                retryPolicy = RetryPolicy.RETRY,
-                execution = { cb ->
-                    actual.add(dispatchTwo.id)
-                    println("Execution failed")
-                    cb(Result.Failure(Exception("Mocked failure")))
-                },
-                completion = { println("Completion block invoked") })
+            retryPolicy = RetryPolicy.RETRY,
+            execution = { cb ->
+                actual.add(dispatchTwo.id)
+                println("Execution failed")
+                cb(Result.Failure(Exception("Mocked failure")))
+            },
+            completion = { println("Completion block invoked") })
         dispatchThree = Dispatch(id = "id3",
-                retryPolicy = RetryPolicy.NONE,
-                execution = { cb ->
-                    actual.add(dispatchThree.id)
-                    println("Execution failed")
-                    cb(Result.Failure(Exception("Mocked failure")))
-                },
-                completion = { println("Completion block invoked") })
-        expected.addAll(listOf(dispatchOne.id, dispatchTwo.id, dispatchTwo.id, dispatchTwo.id,
-                dispatchThree.id, dispatchOne.id, dispatchOne.id))
+            retryPolicy = RetryPolicy.NONE,
+            execution = { cb ->
+                actual.add(dispatchThree.id)
+                println("Execution failed")
+                cb(Result.Failure(Exception("Mocked failure")))
+            },
+            completion = { println("Completion block invoked") })
+        expected.addAll(
+            listOf(
+                dispatchOne.id, dispatchTwo.id, dispatchTwo.id, dispatchTwo.id,
+                dispatchThree.id, dispatchOne.id, dispatchOne.id
+            )
+        )
 
         handler.post {
             dispatcher.enqueue(dispatchOne)

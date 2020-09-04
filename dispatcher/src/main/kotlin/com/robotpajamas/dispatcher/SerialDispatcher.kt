@@ -7,8 +7,9 @@ import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.Executor
 
 class SerialDispatcher(
-        private val executionHandler: Handler = Handler(Looper.getMainLooper()),
-        private val dispatchHandler: Handler = Handler(Looper.getMainLooper())) : Dispatcher {
+    private val executionHandler: Handler = Handler(Looper.getMainLooper()),
+    private val dispatchHandler: Handler = Handler(Looper.getMainLooper())
+) : Dispatcher {
 
     private var active: Dispatchable? = null
     private val queue: Queue<Dispatchable> = ConcurrentLinkedQueue()

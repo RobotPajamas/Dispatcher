@@ -29,7 +29,9 @@ interface Dispatchable : Runnable, Cancellable, Completable, Executable, Timeout
     override fun complete(result: Result<*>) {
         result.onFailure {
             when (retryPolicy) {
-                RetryPolicy.RETRY, RetryPolicy.RESCHEDULE -> if (retries < maxRetries) retry() else super.complete(result)
+                RetryPolicy.RETRY, RetryPolicy.RESCHEDULE -> if (retries < maxRetries) retry() else super.complete(
+                    result
+                )
                 RetryPolicy.NONE -> super.complete(result)
             }
         }

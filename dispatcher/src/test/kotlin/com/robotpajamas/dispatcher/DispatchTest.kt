@@ -12,8 +12,8 @@ class DispatchTest {
     @Test
     fun cancel() {
         val dispatch = Dispatch<String>(
-                id = "something",
-                execution = {})
+            id = "something",
+            execution = {})
         assertThat(dispatch.isCancelled).isFalse()
         dispatch.cancel()
         assertThat(dispatch.isCancelled).isTrue()
@@ -23,8 +23,8 @@ class DispatchTest {
     @Test
     fun getStates() {
         val dispatch = Dispatch<String>(
-                id = "something",
-                execution = {})
+            id = "something",
+            execution = {})
         assertThat(dispatch.state).isEqualTo(State.READY)
 //        dispatch.cancel()
 //        assertThat(dispatch.state).isEqualTo(State.FINISHED)
@@ -34,9 +34,9 @@ class DispatchTest {
     fun getTimeout() {
         val expected = 42
         val dispatch = Dispatch<String>(
-                id = "something",
-                timeout = expected,
-                execution = {})
+            id = "something",
+            timeout = expected,
+            execution = {})
         assertThat(dispatch.timeout).isEqualTo(expected)
     }
 
@@ -44,7 +44,7 @@ class DispatchTest {
     fun getId() {
         val expected = "myId"
         val dispatch = Dispatch<String>(id = expected,
-                execution = {})
+            execution = {})
         assertThat(dispatch.id).isEqualTo(expected)
     }
 }
